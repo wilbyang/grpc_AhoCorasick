@@ -1,0 +1,14 @@
+syntax = "proto3";
+package Sanitize;
+
+service SanitizeService {
+    rpc Sanitize (SanitizeRequest) returns (SanitizeResponse);
+}
+
+message SanitizeRequest {
+  string text = 1;
+}
+
+message SanitizeResponse {
+    string filteredText = 1;
+}

@@ -1,0 +1,29 @@
+[package]
+edition = "2021"
+name = "grpc_AhoCorasick"
+version = "0.1.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "sanitize_server"
+path = "src/sanitize_server.rs"
+doc = false
+
+[[bin]]
+name = "sanitize_client"
+path = "src/sanitize_client.rs"
+doc = false
+
+[dependencies]
+tokio = {version = "1.0", features = ["macros", "rt-multi-thread"]}
+tracing = "0.1"
+tracing-subscriber = {version = "0.3", features = ["env-filter"]}
+anyhow = "1.0"
+tonic = "0.8.1"
+prost = "0.11.0"
+aho-corasick = "0.7.19"
+
+[build-dependencies]
+tonic-build = "0.8.0"
+
