@@ -2,7 +2,7 @@ mod generated;
 
 use aho_corasick::AhoCorasick;
 use generated::sanitize::{sanitize_service_server::{SanitizeServiceServer, SanitizeService}, SanitizeRequest, SanitizeResponse};
-
+use anyhow::Result;
 
 struct AhoCorasickSanitizor {
     ac: AhoCorasick,
@@ -27,16 +27,17 @@ impl SanitizeService for AhoCorasickSanitizor {
     }
 }
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
     let patterns = &["apple", "maple", "Snapple"];
     
     let ac = AhoCorasick::new(patterns);
     let sanitizor = AhoCorasickSanitizor { ac };
-    let addr = "[::1]:50051".parse().unwrap();
+    let addr = "[::1]:50051".parse()?;
     let server = SanitizeServiceServer::new(sanitizor);
     tonic::transport::Server::builder()
         .add_service(server)
         .serve(addr)
-        .await
-        .unwrap();
+        .await?
+        ;
+    Ok(())
 }
