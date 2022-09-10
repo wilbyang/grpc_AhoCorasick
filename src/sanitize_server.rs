@@ -1,5 +1,7 @@
 mod generated;
 
+use std::{fs::File, io::{BufReader, BufRead}};
+
 use aho_corasick::AhoCorasick;
 use generated::sanitize::{sanitize_service_server::{SanitizeServiceServer, SanitizeService}, SanitizeRequest, SanitizeResponse};
 use anyhow::Result;
@@ -28,7 +30,7 @@ impl SanitizeService for AhoCorasickSanitizor {
 }
 #[tokio::main]
 async fn main() -> Result<()> {
-    let patterns = &["apple", "maple", "Snapple"];
+    let patterns = load_patterns();
     
     let ac = AhoCorasick::new(patterns);
     let sanitizor = AhoCorasickSanitizor { ac };
@@ -40,4 +42,15 @@ async fn main() -> Result<()> {
         .await?
         ;
     Ok(())
+}
+
+fn load_patterns() -> Vec<String> {
+    let mut patterns = vec![];
+    let file = File::open("patterns.txt").unwrap();
+    let reader = BufReader::new(file);
+    for line in reader.lines() {
+        let line = line.unwrap();
+        patterns.push(line);
+    }
+    patterns
 }
